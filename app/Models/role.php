@@ -10,6 +10,8 @@ protected $fillable=['id','name'];
 
 
 public function data_user(){
+
+    
 return $this->hasMany(user::class,'role_id');
 }
 
