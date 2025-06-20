@@ -12,6 +12,11 @@ class salarie extends Model
 
 
        public function data_performance_reviews(){
-        $this->hasMany(performance_review::class);
+        return $this->hasMany(performance_review::class);
+       }
+
+
+       public function data_user(){
+              return $this->belongsTo(user::class,'user_id');
        }
 }

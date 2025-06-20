@@ -17,7 +17,7 @@ class User extends Authenticatable
      *
      * @var list<string>
      */
-    protected $fillable = [
+    protected $fillable = ['id',
         'name',
         'email',
         'password','role_id','position','department','hire_date','status'
@@ -45,4 +45,21 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+
+
+    public function data_role(){
+        return $this->belongsTo(role::class,'role_id');
+    }
+
+public function data_salarie(){
+    return $this->hasMany(salarie::class);
+}
+public function data_attendance(){
+    return $this->hasMany(attendance::class);
+}
+
+
+
+
 }

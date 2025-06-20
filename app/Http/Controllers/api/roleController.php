@@ -32,8 +32,10 @@ class roleController extends Controller
     public function store(Request $request)
     {
         try {
+          
             role::create(['name'=> $request->name]);
             return response()->json(['msg'  => 'avec success']);
+
         } catch (\Throwable $th) {
           return $th;
         }

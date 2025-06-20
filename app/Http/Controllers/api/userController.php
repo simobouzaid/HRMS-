@@ -1,14 +1,17 @@
 <?php
 
 namespace App\Http\Controllers\api;
+use DateTime;
+
 use Exception;
+use App\Models\User;
+use App\Models\attendance;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
-use App\Models\User;
-
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\api\attendanceController;
 
 
 class userController extends Controller
@@ -111,20 +114,22 @@ class userController extends Controller
     {
         try {
 
-            if (
-                Auth::attempt([
-                    'email' => $request->email,
-                    'password' => $request->password
-                ])
-            ) {
-
+            if ( Auth::attempt(['email' => $request->email,'password' => $request->password])) {
                 $user = Auth::user();
+                   // pointage 
+                  $att= Attendance::create([
+                    'user_id' => Auth::id(),
+                    'date' => new DateTime(),
+                    'check_in' => now()->format('H:i:s'),
+                    'check_out' => now()->format('H:i:s'),
+                    'status' => 'present'
+                ]);
                 return response()->json(
                     [
                         'msg' => 'is connected',
                         'token' => $user->createToken('auth_token')->plainTextToken,
-                        'userName' => $user->name
-
+                        'userName' => $user->name,
+                         'pointage'=>$att
                     ]
                 );
             }
@@ -132,7 +137,7 @@ class userController extends Controller
 
 
             return response()->json([
-                'msg' => 'not existe'
+                'msg' => 'not register'
             ]);
         } catch (Exception $e) {
 
@@ -144,4 +149,25 @@ class userController extends Controller
 
 
     }
+
+    //    ajouter id de attendance in url get pour faire le poitage
+
+       public function logout($idAttend){
+        try  {
+         $attendance=attendance::find($idAttend);
+         $attendance->update([
+            'check_out' => now()->format('h:i:s'),
+             'status' => 'absent' ,
+          ]);
+
+
+          Auth::logout();
+          return true;  
+        } catch (\Throwable $th) {
+            return false;
+        }
+       }  
+
+
+
 }

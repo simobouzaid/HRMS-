@@ -16,7 +16,7 @@ return new class extends Migration
             $table->bigInteger('user_id');
             $table->date('date');
             $table->time('check_in');
-            $table->time('check_out');
+            $table->time('check_out')->nullable();
             $table->enum('status',['present','absent','late']);
             $table->timestamps();
         });
