@@ -21,7 +21,7 @@ class userController extends Controller
      */
     public function index()
     {
-        return response()->json(user::all());
+        // return response()->json(user::all());
     }
 
     /**
@@ -74,8 +74,13 @@ class userController extends Controller
      */
     public function show(user $user)
     {
-
-        return response()->json($user);
+         try {
+             return response()->json($user);
+             //code...
+            } catch (\Throwable $th) {
+            
+            return response()->json($th->getPrevious());
+         }
 
     }
 
@@ -117,7 +122,7 @@ class userController extends Controller
             if ( Auth::attempt(['email' => $request->email,'password' => $request->password])) {
                 $user = Auth::user();
                    // pointage 
-                  $att= Attendance::create([
+                   Attendance::create([
                     'user_id' => Auth::id(),
                     'date' => new DateTime(),
                     'check_in' => now()->format('H:i:s'),
@@ -129,7 +134,8 @@ class userController extends Controller
                         'msg' => 'is connected',
                         'token' => $user->createToken('auth_token')->plainTextToken,
                         'userName' => $user->name,
-                         'pointage'=>$att
+                        'userId' => $user->id
+                      
                     ]
                 );
             }

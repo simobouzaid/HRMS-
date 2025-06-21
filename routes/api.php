@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\api\attendanceController;
 use App\Http\Controllers\api\HomeController;
+use App\Http\Controllers\api\roleController;
 use App\Http\Controllers\api\SalarieController;
 use App\Http\Controllers\api\userController;
 use App\Models\role;
@@ -23,7 +24,7 @@ route::middleware('auth:sanctum')->group(function(){
 
 Route::apiResource('users',userController::class);
 Route::post('login',[userController::class,'login']);
-
+Route::apiResource('role',roleController::class);
 
 
 

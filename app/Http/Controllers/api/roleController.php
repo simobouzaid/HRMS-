@@ -4,6 +4,7 @@ namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
 use App\Models\role;
+use App\Models\user;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -16,12 +17,23 @@ class roleController extends Controller
     public function index()
     {
         try {
-                  $roles = Role::get();
-                  return response()->json([
-                    'roles' => $roles
-                  ]);
+
+          $result = user::where('role_id',2)->first();
+
+              if(empty($result)){
+
+                $roles = Role::get();
+                return response()->json([
+                  'roles' => $roles
+                ]);
+              }
+            return response()->json(role::where('id','!=',2)->get());
+
+
+
+
          } catch (Exception $e) {
-           return $e;
+           return response()->json($e->getPrevious());
         }
 
     }

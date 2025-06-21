@@ -1,15 +1,8 @@
 <?php
 
 namespace App\Http\Controllers\api;
-use App\Models\attendance;
-use App\Models\User;
-use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-
 use Illuminate\Support\Facades\Auth;
-use Mockery\Undefined;
-
 class HomeController extends Controller
 {
     public function index()
@@ -17,20 +10,25 @@ class HomeController extends Controller
         try {
 
 
-            $result = Auth::user()->load('data_role','data_salarie','data_attendance');
+            $result = Auth::user();
+            $result->load('data_role');
             if ($result->data_role->name === 'hr') {
 
 
-              return response()->json([
-                       'data' =>$result
-              ]);
+                return response()->json([
+                    $result->load('data_salarie', 'data_attendance')
+                ]);
 
 
+            } elseif ($result->data_role->name === 'admin') {
+                return response()->json(
+                    $result->load('data_salarie', 'data_attendance')
+                );
             }
 
         } catch (\Throwable $th) {
             return response()->json([
-                'error' => 'حدث خطأ في جلب البيانات',
+                'error' => 'errore de donnee',
                 'details' => env('APP_DEBUG') ? $th->getMessage() : null
             ], 500);
         }
@@ -42,5 +40,5 @@ class HomeController extends Controller
 
 
 
-    
+
 }
