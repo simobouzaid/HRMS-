@@ -16,6 +16,7 @@ Route::get('/user', function (Request $request) {
               
 
 route::middleware('auth:sanctum')->group(function(){
+    
      Route::apiResource('salarie',SalarieController::class);  
      Route::apiResource('attendance',attendanceController::class);
      Route::get('/',[HomeController::class,'index']);     

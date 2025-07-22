@@ -5,6 +5,7 @@ namespace App\Http\Controllers\api;
 use App\Http\Controllers\Controller;
 use App\Models\training;
 use Illuminate\Http\Request;
+use Response;
 
 class trainingController extends Controller
 {
@@ -13,7 +14,7 @@ class trainingController extends Controller
      */
     public function index()
     {
-        //
+
     }
 
     /**
@@ -21,7 +22,22 @@ class trainingController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        try {
+            training::create([
+                'title' => $request->title,
+                'description' => $request->description,
+                'start_date' => $request->start_date,
+                'end_date' => $request->end_date
+            ]);
+            return Response()->json([
+                'result' => 'avec success'
+            ]);
+        } catch (\Throwable $th) {
+            //throw $th;
+            return response()->json([
+                'result' => $th->getPrevious()
+            ]);
+        }
     }
 
     /**
@@ -29,7 +45,12 @@ class trainingController extends Controller
      */
     public function show(training $training)
     {
-        //
+        try {
+            return response()->json([$training]);
+        } catch (\Throwable $th) {
+            //throw $th;
+            return response()->json([$th->getPrevious()]);
+        }
     }
 
     /**
@@ -37,7 +58,19 @@ class trainingController extends Controller
      */
     public function update(Request $request, training $training)
     {
-        //
+        try {
+            $training->update([
+                'title' => $request->title,
+                'description' => $request->description,
+                'start_date' => $request->start_date,
+                'end_date' => $request->end_date
+            ]);
+            return response()->json([
+                'result' => 'avec success'
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json([$th->getPrevious()]);
+        }
     }
 
     /**
@@ -45,6 +78,12 @@ class trainingController extends Controller
      */
     public function destroy(training $training)
     {
-        //
+        try {
+             
+         $training->delete();
+        } catch (\Throwable $th) {
+            return response()->json([$th->getPrevious()]);
+
+        }
     }
 }
